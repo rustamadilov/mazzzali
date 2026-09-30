@@ -18,7 +18,7 @@ export interface User {
   id: string;
   email: string;
   displayName: string;
-  focus: EatingFocus;
+  focus: EatingFocus | null;
   categories: RecipeCategory[];
 }
 
@@ -26,6 +26,7 @@ export interface Goal {
   startingWeight: number;
   targetWeight: number;
   weightUnit: WeightUnit;
+  targetDate: string | null;
   updatedAt: string;
 }
 

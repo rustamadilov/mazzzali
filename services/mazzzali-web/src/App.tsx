@@ -11,6 +11,7 @@ import { AppShell } from './components/AppShell';
 import { CreateAccountPage, LoginPage } from './pages/AuthPages';
 import { DashboardPage } from './pages/DashboardPage';
 import { GoalsPage } from './pages/GoalsPage';
+import { OnboardingPage } from './pages/OnboardingPage';
 import { RecipeDetailPage, RecipesPage } from './pages/RecipePages';
 import './styles.css';
 
@@ -59,11 +60,12 @@ function AppRoutes({ ready }: { ready: boolean }) {
     <Routes location={location}>
       <Route path="/login" element={user ? <Navigate to="/" replace /> : <LoginPage />} />
       <Route path="/login/create-account" element={user ? <Navigate to="/" replace /> : <CreateAccountPage />} />
-      <Route path="/" element={user ? <DashboardPage /> : <Navigate to="/login" replace />} />
-      <Route path="/recipes" element={user ? <RecipesPage /> : <Navigate to="/login" replace />} />
-      <Route path="/recipes/:recipeId" element={user ? <RecipeDetailPage /> : <Navigate to="/login" replace />} />
-      <Route path="/goals" element={user ? <GoalsPage /> : <Navigate to="/login" replace />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="/onboarding" element={user ? (user.focus === null ? <OnboardingPage /> : <Navigate to="/" replace />) : <Navigate to="/login" replace />} />
+      <Route path="/" element={user ? (user.focus === null ? <Navigate to="/onboarding" replace /> : <DashboardPage />) : <Navigate to="/login" replace />} />
+      <Route path="/recipes" element={user ? (user.focus === null ? <Navigate to="/onboarding" replace /> : <RecipesPage />) : <Navigate to="/login" replace />} />
+      <Route path="/recipes/:recipeId" element={user ? (user.focus === null ? <Navigate to="/onboarding" replace /> : <RecipeDetailPage />) : <Navigate to="/login" replace />} />
+      <Route path="/goals" element={user ? (user.focus === null ? <Navigate to="/onboarding" replace /> : <GoalsPage />) : <Navigate to="/login" replace />} />
+      <Route path="*" element={<Navigate to={user ? (user.focus === null ? '/onboarding' : '/') : '/login'} replace />} />
     </Routes>
   );
   return <motion.div key={location.pathname} className="route-frame" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}>{page}</motion.div>;

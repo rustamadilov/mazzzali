@@ -9,7 +9,6 @@ export const RegisterSchema = z.object({
   email: z.string().trim().email().max(254).transform((email) => email.toLowerCase()),
   password: z.string().min(8).max(128),
   displayName: z.string().trim().min(1).max(80),
-  focus: EatingFocusSchema,
 });
 
 export const LoginSchema = z.object({
@@ -29,6 +28,7 @@ export const GoalUpdateSchema = z.object({
   startingWeight: z.number().positive().max(1000),
   targetWeight: z.number().positive().max(1000),
   weightUnit: WeightUnitSchema,
+  targetDate: z.string().date().refine((value) => value >= new Date().toISOString().slice(0, 10), 'Target date must be today or later.'),
 });
 
 export const RecipeQuerySchema = z.object({

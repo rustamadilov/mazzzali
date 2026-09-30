@@ -8,12 +8,12 @@ interface UserRow extends User { passwordHash?: string }
 export class UserRepository {
   constructor(private readonly database: IDatabaseService) {}
 
-  async create(input: { email: string; passwordHash: string; displayName: string; focus: User['focus'] }): Promise<User> {
+  async create(input: { email: string; passwordHash: string; displayName: string }): Promise<User> {
     try {
       const result = await this.database.query<UserRow>(
-        `INSERT INTO users (id, email, password_hash, display_name, focus, categories)
-         VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, email, display_name, focus, categories`,
-        [randomUUID(), input.email, input.passwordHash, input.displayName, input.focus, []],
+        `INSERT INTO users (id, email, password_hash, display_name, categories)
+         VALUES ($1, $2, $3, $4, $5) RETURNING id, email, display_name, focus, categories`,
+        [randomUUID(), input.email, input.passwordHash, input.displayName, []],
       );
       return result.rows[0];
     } catch (error) {

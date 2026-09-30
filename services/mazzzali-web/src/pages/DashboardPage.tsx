@@ -41,6 +41,7 @@ export function DashboardPage() {
             <StatCard icon={<PersonRegular />} label="Chosen focus" value={user?.focus === 'weight-loss' ? 'Weight loss' : 'Healthy eating'} detail="Your selected eating focus" />
             <StatCard icon={<ScaleFillRegular />} label="Starting weight" value={activeGoal ? `${activeGoal.startingWeight.toFixed(1)} ${activeGoal.weightUnit}` : 'Not set'} detail="Entered by you" />
             <StatCard icon={<TargetRegular />} label="Target weight" value={activeGoal ? `${activeGoal.targetWeight.toFixed(1)} ${activeGoal.weightUnit}` : 'Not set'} detail="Entered by you" tone="coral" />
+            <StatCard icon={<CalendarRegular />} label="Target date" value={activeGoal?.targetDate ? new Date(`${activeGoal.targetDate}T12:00:00`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Not set'} detail="Your chosen planning date" />
           </div>
           <div className="dashboard-columns">
             <section>

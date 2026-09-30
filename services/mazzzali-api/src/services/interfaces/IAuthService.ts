@@ -1,10 +1,9 @@
-import type { EatingFocus, User } from '../../../../shared/types/entities.js';
+import type { User } from '../../../../shared/types/entities.js';
 
 export interface RegisterInput {
   email: string;
   password: string;
   displayName: string;
-  focus: EatingFocus;
 }
 
 export interface LoginInput {

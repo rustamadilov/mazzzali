@@ -8,7 +8,7 @@
 
 ## 1. Project Overview
 
-**Goal**: Build Mazzzali, a responsive wellness and recipe app for adults choosing between a weight-loss focus and healthier, tasty eating. Signed-in users can set starting and target weight, browse curated recipes across eight categories, and view externally hosted cooking videos. The MVP stores account details and user-entered starting/target weight; it does not add ongoing weigh-in history or provide medical advice. The project is designed so that every module is independently testable.
+**Goal**: Build Mazzzali, a responsive wellness and recipe app for adults choosing between a weight-loss focus and healthier, tasty eating. After creating an account, users choose their focus; users choosing weight loss can enter starting weight, target weight, and a personal target date. Users can browse curated recipes across eight categories and view externally hosted cooking videos. The MVP does not add ongoing weigh-in history or provide medical advice. The project is designed so that every module is independently testable.
 
 **App Type**: SPA + API
 
@@ -108,8 +108,8 @@ Double-check every `❓` item before running or debugging the project; those pro
 | Home              | `/`                  | Signed-in snapshot of the user's chosen focus, starting/target weight, and recipe picks | `header + nav + hero + kpi-row + two-column(list+list)` |
 | Recipes           | `/recipes`           | Browse curated recipes by category, with filtered-results empty state                   | `header + nav + tabs + grid + empty`                    |
 | Recipe Detail     | `/recipes/:recipeId` | Review ingredients and steps, then open the publisher-hosted cooking video              | `header + nav + two-column(main+list)`                  |
-| Weight Goals      | `/goals`             | Choose a healthy-eating focus or set starting and target weight for weight loss         | `header + nav + form + action-bar + loading (skeleton)` |
-| Sign In & Sign Up | `/login`             | Sign in or create an account and choose a weight-loss or healthy-eating focus           | `form + tabs`                                           |
+| Weight Goals      | `/goals`             | Review or update the focus, weights, and personal target date                           | `header + nav + form + action-bar + loading (skeleton)` |
+| Sign In & Sign Up | `/login`             | Sign in or create an account; new accounts continue to focus onboarding                 | `form + tabs`                                           |
 
 ### Sample Content
 
@@ -133,9 +133,9 @@ Recipe Detail — recipe fixtures:
 | Tomato & White Bean Soup | 35 min / 4 | Vegetarian, Budget-Friendly | Publisher-hosted cooking video |
 | Herby Salmon Tray Bake | 30 min / 2 | High Protein, Gluten-Free | Publisher-hosted cooking video |
 Recipe Detail — Lemon Chickpea Bowls ingredients: 1 can chickpeas · 1 cucumber · 1 lemon · 150 g cooked quinoa · 2 tbsp tahini
-Weight Goals — choices: Weight loss (starting: 84.2 kg · target: 76.0 kg) · Healthy, tasty eating (no weight goal).
+Weight Goals — choices: Weight loss (starting: 84.2 kg · target: 76.0 kg · target date: user selected) · Healthy, tasty eating (no weight goal).
 Weight Goals — food categories: Quick & Easy · High Protein · Vegetarian · Vegan · Mediterranean · Gluten-Free · Budget-Friendly · Desserts.
-Sign In & Sign Up — fields: Email: you@example.com · Password: (blank) · Eating focus: Weight loss / Healthy, tasty eating · Display name: (blank)
+Sign In & Sign Up — fields: Email: you@example.com · Password: (blank) · Display name: (blank). After signup, onboarding asks for eating focus; weight loss additionally asks starting weight, target weight, unit, and target date.
 
 ---
 
@@ -179,19 +179,19 @@ project-root/
 
 ## 8. Route Definitions
 
-| #   | Method | Path                     | Description                                                       | Request Body                                   | Response Body                 | Status Codes  |
-| --- | ------ | ------------------------ | ----------------------------------------------------------------- | ---------------------------------------------- | ----------------------------- | ------------- |
-| 1   | GET    | `/api/health`            | Health check for API and required dependencies                    | —                                              | `{ status, services }`        | 200, 503      |
-| 2   | POST   | `/api/auth/register`     | Create an account with an eating focus                            | `{ email, password, displayName, focus }`      | `{ user }`                    | 201, 409, 422 |
-| 3   | POST   | `/api/auth/login`        | Sign in to an existing account                                    | `{ email, password }`                          | `{ user }`                    | 200, 401, 422 |
-| 4   | GET    | `/api/profile/me`        | Read the signed-in user's profile, focus, and food categories     | —                                              | `{ user, focus, categories }` | 200, 401, 404 |
-| 5   | PUT    | `/api/profile/me`        | Update display name, eating focus, or food categories             | `{ displayName?, focus?, categories? }`        | `{ user, focus, categories }` | 200, 401, 422 |
-| 6   | GET    | `/api/goals`             | Read the signed-in user's starting and target weight              | —                                              | `{ goal }`                    | 200, 401, 404 |
-| 7   | PUT    | `/api/goals`             | Create or update the weight goal                                  | `{ startingWeight, targetWeight, weightUnit }` | `{ goal }`                    | 200, 401, 422 |
-| 8   | GET    | `/api/recipes`           | Browse recipes with optional text and category filters            | Query: `q?`, `category?`, `limit?`             | `{ recipes, total }`          | 200, 422      |
-| 9   | GET    | `/api/recipes/:recipeId` | Read ingredients, steps, source, and cooking-video embed metadata | —                                              | `{ recipe }`                  | 200, 404      |
+| #   | Method | Path                     | Description                                                               | Request Body                                               | Response Body                 | Status Codes  |
+| --- | ------ | ------------------------ | ------------------------------------------------------------------------- | ---------------------------------------------------------- | ----------------------------- | ------------- |
+| 1   | GET    | `/api/health`            | Health check for API and required dependencies                            | —                                                          | `{ status, services }`        | 200, 503      |
+| 2   | POST   | `/api/auth/register`     | Create an account before choosing an eating focus                         | `{ email, password, displayName }`                         | `{ user }`                    | 201, 409, 422 |
+| 3   | POST   | `/api/auth/login`        | Sign in to an existing account                                            | `{ email, password }`                                      | `{ user }`                    | 200, 401, 422 |
+| 4   | GET    | `/api/profile/me`        | Read the signed-in user's profile, focus, and food categories             | —                                                          | `{ user, focus, categories }` | 200, 401, 404 |
+| 5   | PUT    | `/api/profile/me`        | Update display name, eating focus, or food categories                     | `{ displayName?, focus?, categories? }`                    | `{ user, focus, categories }` | 200, 401, 422 |
+| 6   | GET    | `/api/goals`             | Read the signed-in user's starting weight, target weight, and target date | —                                                          | `{ goal }`                    | 200, 401, 404 |
+| 7   | PUT    | `/api/goals`             | Create or update the weight goal and personal target date                 | `{ startingWeight, targetWeight, weightUnit, targetDate }` | `{ goal }`                    | 200, 401, 422 |
+| 8   | GET    | `/api/recipes`           | Browse recipes with optional text and category filters                    | Query: `q?`, `category?`, `limit?`                         | `{ recipes, total }`          | 200, 422      |
+| 9   | GET    | `/api/recipes/:recipeId` | Read ingredients, steps, source, and cooking-video embed metadata         | —                                                          | `{ recipe }`                  | 200, 404      |
 
-All API errors use `{ error: { code, message, details } }`; validate user-entered values and avoid medical advice or guaranteed health outcomes. Recipe records retain their publisher attribution and externally hosted video embed URL; the app does not copy or host media files. The weight-goal model stores only the starting and target weights confirmed for this MVP, not ongoing check-ins.
+All API errors use `{ error: { code, message, details } }`; validate user-entered values and avoid medical advice or guaranteed health outcomes. Recipe records retain their publisher attribution and externally hosted video embed URL; the app does not copy or host media files. The weight-goal model stores the user-entered starting and target weights and personal target date, not ongoing check-ins.
 
 ---
 

@@ -12,8 +12,8 @@ export const openApiDocument = {
       put: { summary: 'Update the current profile', security: [{ cookieAuth: [] }], responses: { '200': { description: 'Profile updated' }, '401': { description: 'Authentication required' }, '422': { description: 'Invalid input' } } },
     },
     '/goals': {
-      get: { summary: 'Read starting and target weight', security: [{ cookieAuth: [] }], responses: { '200': { description: 'Goal returned' }, '401': { description: 'Authentication required' }, '404': { description: 'Goal not set' } } },
-      put: { summary: 'Create or update the weight goal', security: [{ cookieAuth: [] }], responses: { '200': { description: 'Goal saved' }, '401': { description: 'Authentication required' }, '422': { description: 'Invalid input' } } },
+      get: { summary: 'Read starting weight, target weight, and target date', security: [{ cookieAuth: [] }], responses: { '200': { description: 'Goal returned' }, '401': { description: 'Authentication required' }, '404': { description: 'Goal not set' } } },
+      put: { summary: 'Create or update the weight goal and target date', security: [{ cookieAuth: [] }], responses: { '200': { description: 'Goal saved' }, '401': { description: 'Authentication required' }, '422': { description: 'Invalid input' } } },
     },
     '/recipes': { get: { summary: 'Browse recipes', security: [{ cookieAuth: [] }], parameters: [{ name: 'q', in: 'query', schema: { type: 'string' } }, { name: 'category', in: 'query', schema: { type: 'string' } }, { name: 'limit', in: 'query', schema: { type: 'integer', minimum: 1, maximum: 100 } }], responses: { '200': { description: 'Matching recipes' }, '401': { description: 'Authentication required' }, '422': { description: 'Invalid query' } } } },
     '/recipes/{recipeId}': { get: { summary: 'Read recipe ingredients, steps, source, and video', security: [{ cookieAuth: [] }], parameters: [{ name: 'recipeId', in: 'path', required: true, schema: { type: 'string' } }], responses: { '200': { description: 'Recipe returned' }, '401': { description: 'Authentication required' }, '404': { description: 'Recipe not found' } } } },

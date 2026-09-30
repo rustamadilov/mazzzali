@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import type { FormEvent, ReactNode } from 'react';
-import { Button, Card, Field, Input, MessageBar, MessageBarBody, Radio, RadioGroup, Tab, TabList, Text } from '@fluentui/react-components';
+import { Button, Card, Field, Input, MessageBar, MessageBarBody, Tab, TabList, Text } from '@fluentui/react-components';
 import { ArrowLeftRegular, BookOpenRegular, PersonAddRegular, PersonArrowRightRegular } from '@fluentui/react-icons';
 import { Link, useNavigate } from 'react-router-dom';
-import type { EatingFocus } from '@mazzzali/shared';
 import { useApp } from '../App';
 
 export function LoginPage() {
@@ -35,7 +34,6 @@ export function LoginPage() {
 export function CreateAccountPage() {
   const { createAccount } = useApp();
   const navigate = useNavigate();
-  const [focus, setFocus] = useState<EatingFocus>('weight-loss');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
@@ -46,21 +44,17 @@ export function CreateAccountPage() {
     const email = String(values.get('email')).trim();
     const password = String(values.get('password'));
     if (password.length < 8) { setError('Choose a password with at least 8 characters.'); setBusy(false); return; }
-    try { await createAccount({ displayName, email, password, focus }); navigate('/', { replace: true }); }
+    try { await createAccount({ displayName, email, password }); navigate('/onboarding', { replace: true }); }
     catch (cause) { setError(cause instanceof Error ? cause.message : 'Your account could not be created.'); }
     finally { setBusy(false); }
   };
 
-  return <AuthFrame eyebrow="A fresh start, your way" title="Good food starts here." body="Create an account to choose a focus and find recipes that feel right for you." back>
+  return <AuthFrame eyebrow="A fresh start, your way" title="Good food starts here." body="Create your account first. You’ll choose your eating focus next." back>
     <TabList selectedValue="create" className="auth-tabs"><Tab value="create" icon={<PersonAddRegular />}>Create account</Tab><Tab value="signin" icon={<PersonArrowRightRegular />} onClick={() => navigate('/login')}>Sign in</Tab></TabList>
     <form className="auth-form create-form" onSubmit={(event) => void submit(event)}>
       <Field label="Display name" required><Input name="displayName" autoComplete="name" placeholder="Your name" required /></Field>
       <Field label="Email" required><Input name="email" type="email" autoComplete="email" placeholder="you@example.com" required /></Field>
       <Field label="Password" required validationMessage="Use at least 8 characters." validationState="warning"><Input name="password" type="password" autoComplete="new-password" minLength={8} required /></Field>
-      <Field label="Your eating focus"><RadioGroup value={focus} onChange={(_, data) => setFocus(data.value as EatingFocus)}>
-        <Radio value="weight-loss" label="Weight loss" /><Text className="focus-hint">You can add a starting and target weight after setting up your account.</Text>
-        <Radio value="healthy-tasty-eating" label="Healthy, tasty eating" />
-      </RadioGroup></Field>
       {error && <MessageBar intent="error"><MessageBarBody>{error}</MessageBarBody></MessageBar>}
       <Button type="submit" appearance="primary" icon={<PersonAddRegular />} disabled={busy}>{busy ? 'Creating account…' : 'Create account'}</Button>
     </form>

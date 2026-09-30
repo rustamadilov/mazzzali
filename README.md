@@ -1,6 +1,6 @@
 # Mazzzali
 
-Mazzzali is a React/Vite wellness and recipe app backed by an Express API hosted in Azure Functions. The MVP stores account details, eating focus, and optional starting/target weights; it does not collect weigh-in history or host recipe media.
+Mazzzali is a React/Vite wellness and recipe app backed by an Express API hosted in Azure Functions. After creating an account, users choose an eating focus. Weight-loss users can enter starting and target weights and a personal target date. The MVP does not collect weigh-in history or host recipe media.
 
 ## Local setup
 
@@ -11,10 +11,10 @@ Mazzzali is a React/Vite wellness and recipe app backed by an Express API hosted
 5. Start the API from `services/mazzzali-api` with Azure Functions Core Tools (`func start`).
 6. Start the web app with `npm --prefix services/mazzzali-web run dev`.
 
-The frontend currently uses a mock API client so it can run without the Functions host. `.azure/integration-plan.md` records the API seam and database work for the integration phase. Local Functions settings are intentionally ignored by Git; `services/mazzzali-api/local.settings.json` contains development-only values.
+The frontend uses a typed live API client through the Vite `/api` proxy. New accounts are directed to focus onboarding before accessing the app. Local Functions settings are intentionally ignored by Git; `services/mazzzali-api/local.settings.json` contains development-only values.
 
 ## Workspaces
 
-- `services/mazzzali-web`: React, Vite, Fluent UI, and the mock-backed API seam.
+- `services/mazzzali-web`: React, Vite, Fluent UI, and the live API client.
 - `services/mazzzali-api`: Express routes, Azure Functions v4 entry point, auth, repositories, and Azure service providers.
 - `services/shared`: API entities, response contracts, and Zod validation schemas.
