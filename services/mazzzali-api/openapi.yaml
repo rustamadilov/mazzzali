@@ -1,0 +1,94 @@
+openapi: 3.1.0
+info:
+  title: Mazzzali API
+  version: 1.0.0
+servers:
+  - url: /api
+paths:
+  /health:
+    get:
+      summary: Check API and essential dependencies
+      responses:
+        "200": { description: Healthy or degraded }
+        "503": { description: All essential services unavailable }
+  /auth/register:
+    post:
+      summary: Create an account
+      responses:
+        "201": { description: Account created }
+        "409": { description: Email already registered }
+        "422": { description: Invalid input }
+  /auth/login:
+    post:
+      summary: Sign in
+      responses:
+        "200": { description: Signed in }
+        "401": { description: Invalid credentials }
+        "422": { description: Invalid input }
+  /auth/logout:
+    post:
+      summary: End the current session
+      responses:
+        "204": { description: Signed out }
+  /profile/me:
+    get:
+      summary: Read the current profile
+      security: [{ cookieAuth: [] }]
+      responses:
+        "200": { description: Profile returned }
+        "401": { description: Authentication required }
+        "404": { description: Profile not found }
+    put:
+      summary: Update display name, focus, or recipe categories
+      security: [{ cookieAuth: [] }]
+      responses:
+        "200": { description: Profile updated }
+        "401": { description: Authentication required }
+        "422": { description: Invalid input }
+  /goals:
+    get:
+      summary: Read starting and target weight
+      security: [{ cookieAuth: [] }]
+      responses:
+        "200": { description: Goal returned }
+        "401": { description: Authentication required }
+        "404": { description: Goal not set }
+    put:
+      summary: Create or update a weight goal
+      security: [{ cookieAuth: [] }]
+      responses:
+        "200": { description: Goal saved }
+        "401": { description: Authentication required }
+        "422": { description: Invalid input }
+  /recipes:
+    get:
+      summary: Browse recipes with optional filters
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - { name: q, in: query, schema: { type: string } }
+        - { name: category, in: query, schema: { type: string } }
+        - {
+            name: limit,
+            in: query,
+            schema: { type: integer, minimum: 1, maximum: 100 },
+          }
+      responses:
+        "200": { description: Matching recipes }
+        "401": { description: Authentication required }
+        "422": { description: Invalid query }
+  /recipes/{recipeId}:
+    get:
+      summary: Read recipe details and publisher video metadata
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - { name: recipeId, in: path, required: true, schema: { type: string } }
+      responses:
+        "200": { description: Recipe returned }
+        "401": { description: Authentication required }
+        "404": { description: Recipe not found }
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: mazzzali_session
