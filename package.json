@@ -1,0 +1,15 @@
+{
+  "name": "mazzzali",
+  "private": true,
+  "workspaces": [
+    "services/mazzzali-api",
+    "services/mazzzali-web",
+    "services/shared"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace @mazzzali/shared && npm run build --workspace mazzzali-api && npm run build --workspace mazzzali-web",
+    "test": "npm run test --workspace mazzzali-api && npm run test --workspace mazzzali-web",
+    "check:contrast": "node scripts/check-ui-contrast.mjs",
+    "check:ui": "node scripts/check-ui-contracts.mjs && npm run check:contrast"
+  }
+}

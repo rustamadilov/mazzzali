@@ -1,0 +1,28 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-mazzzali}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mazzzali_local}
+      POSTGRES_DB: ${POSTGRES_DB:-mazzzali}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-mazzzali} -d ${POSTGRES_DB:-mazzzali}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite:3.35.0
+    command: azurite --blobHost 0.0.0.0 --queueHost 0.0.0.0 --tableHost 0.0.0.0
+    ports:
+      - "10000:10000"
+      - "10001:10001"
+      - "10002:10002"
+    volumes:
+      - azurite-data:/data
+volumes:
+  postgres-data:
+  azurite-data:
